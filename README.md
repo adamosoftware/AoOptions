@@ -1,6 +1,8 @@
 # AoOptions
 AoOptions library is a replacement for the Settings feature that comes with Visual Studio, offering XML persistence for user settings in WinForms apps. The built-in Settings class tracks with the product version, causing users to lose their settings if the program version changes. This is terrible behavior in my opinion! AoOptions fixes this, and adds some capabilities such as tracking form sizes/positions, supports encrypted properties, binds checked menu items, and offers MRU list capability.
 
+Nuget package is **AoOptions**.
+
 To get started, create a class to hold user settings that inherits from `UserOptionsBase`. For example:
 
     public class UserOptions : UserOptionsBase
