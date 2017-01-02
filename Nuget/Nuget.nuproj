@@ -19,7 +19,7 @@
   <Import Project="$(NuProjPath)\NuProj.props" Condition="Exists('$(NuProjPath)\NuProj.props')" />
   <PropertyGroup Label="Configuration">
     <Id>AoOptions</Id>
-    <Version>1.5.2</Version>
+    <Version>1.5.3</Version>
     <Title>AoOptions</Title>
     <Authors>Adam O'Neil</Authors>
     <Owners>Adam O'Neil</Owners>
