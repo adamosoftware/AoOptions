@@ -27,7 +27,13 @@ namespace OptionsTest
 			_options.TrackFormPosition(this, fp => { _options.MainFormPosition = fp; });
 
 			_options.RecentFiles.MenuItem = recentFilesToolStripMenuItem;
-			_options.RecentFiles.FileSelected += RecentFiles_FileSelected;			
+			_options.RecentFiles.FileSelected += RecentFiles_FileSelected;
+
+			setting1EnabledToolStripMenuItem.Checked = _options.Setting1;
+			_options.BindCheckedMenuItem(setting1EnabledToolStripMenuItem, (menuItem) => { _options.Setting1 = menuItem.Checked; });
+
+			setting2EnabledToolStripMenuItem.Checked = _options.Setting2;
+			_options.BindCheckedMenuItem(setting2EnabledToolStripMenuItem, (menuItem) => { _options.Setting2 = menuItem.Checked; });
 		}
 
 		private void RecentFiles_FileSelected(object sender, EventArgs e)

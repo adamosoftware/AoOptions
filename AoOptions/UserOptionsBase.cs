@@ -71,10 +71,11 @@ namespace AdamOneilSoftware
 				PropertyInfo[] allProps = typeof(T).GetProperties();
 				foreach (var prop in allProps.Where(p => p.HasAttribute<EncryptAttribute>()))
 				{
+					EncryptAttribute attr = prop.GetCustomAttribute<EncryptAttribute>();
 					object currentValue = prop.GetValue(result);
 					if (currentValue != null)
 					{
-						prop.SetValue(result, Encryption.Decrypt(currentValue.ToString()));
+						prop.SetValue(result, Encryption.Decrypt(currentValue.ToString(), attr.Scope));
 					}					
 				}
 			}
@@ -90,10 +91,11 @@ namespace AdamOneilSoftware
 			PropertyInfo[] allProps = GetType().GetProperties();
 			foreach (var prop in allProps.Where(p => p.HasAttribute<EncryptAttribute>()))
 			{
+				EncryptAttribute attr = prop.GetCustomAttribute<EncryptAttribute>();
 				object currentValue = prop.GetValue(this);
 				if (currentValue != null)
 				{
-					prop.SetValue(this, Encryption.Encrypt(currentValue.ToString()));
+					prop.SetValue(this, Encryption.Encrypt(currentValue.ToString(), attr.Scope));
 				}
 			}
 
