@@ -1,1 +1,1 @@
-﻿This is your NuGet package.
+﻿Please see https://github.com/adamosoftware/AoOptions for documentation and examples
