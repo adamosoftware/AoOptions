@@ -71,7 +71,7 @@ Here's what the form Load event would need. I have omitted some code for clarity
         _options.RecentFiles.FileSelected += RecentFiles_Selected;
     }
     
-    private void RecentFiles_Select(object sender, EventArgs e)
+    private void RecentFiles_Selected(object sender, EventArgs e)
     {
         MessageBox(_options.RecentFiles.SelectedFilename);
     }
