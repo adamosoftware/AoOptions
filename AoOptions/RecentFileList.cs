@@ -11,16 +11,21 @@ namespace AdamOneilSoftware
 	{
 		private string _selectedFile = null;
 		private ToolStripMenuItem _menuItem = null;
+		private readonly int _maxCount;
 
-		public RecentFileList()
+		public RecentFileList(int maxCount = 4)
 		{
+			_maxCount = maxCount;
 		}
 
 		public event EventHandler FileSelected;
 
 		public string SelectedFilename { get { return _selectedFile; } }
 
-		public int MaxCount { get; set; }
+		public int MaxCount
+		{
+			get { return _maxCount; }
+		}
 
 		public ToolStripMenuItem MenuItem
 		{
@@ -43,11 +48,6 @@ namespace AdamOneilSoftware
 				// add as sub-menu items
 				MenuItem.DropDownItems.Clear();
 				BuildMenuItems();
-			}
-
-			if (Separator != null)
-			{
-
 			}
 		}
 

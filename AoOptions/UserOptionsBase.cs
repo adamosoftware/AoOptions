@@ -150,6 +150,6 @@ namespace AdamOneilSoftware
 				menuItem.Checked = !menuItem.Checked;
 				onClick.Invoke(menuItem);
 			};
-		}
+		}		
 	}
 }

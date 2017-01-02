@@ -12,7 +12,7 @@ namespace OptionsTest
 	{
 		public Options()
 		{
-			RecentFiles = new RecentFileList() { MaxCount = 4 };			
+			RecentFiles = new RecentFileList(4);			
 		}
 
 		public FormPosition MainFormPosition { get; set; }
