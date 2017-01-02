@@ -31,7 +31,7 @@ Then, use your settings class in a Form like this. Use the `Load` method to load
       _options.TrackFormPosition(this, fp => { _options.MainFormPosition = fp });
     }
 
-Use encrypted properties just like any other. There's no special handling required, you simply use the `Encrypt` attribute on the property definition.
+Use encrypted properties just like any other. There's no special handling required, you simply use the `Encrypt` attribute on the property definition. Encrypted properties are encrypted with DPAPI `DataProtectionScope.CurrentUser`.
 
 ##Binding Settings to Checked Menu Items
 There are two steps. 1) In your form's Load event, set the initial Checked state of the menu item according to the current option setting. 2) Use the `BindCheckedMenuItem` method to track subsequent changes to the check state. Example:
