@@ -71,16 +71,21 @@ namespace AdamOneilSoftware
 				PropertyInfo[] allProps = typeof(T).GetProperties();
 				foreach (var prop in allProps.Where(p => p.HasAttribute<EncryptAttribute>()))
 				{
-					EncryptAttribute attr = prop.GetCustomAttribute<EncryptAttribute>();
-					object currentValue = prop.GetValue(result);
-					if (currentValue != null)
-					{
-						prop.SetValue(result, Encryption.Decrypt(currentValue.ToString(), attr.Scope));
-					}					
+					DecryptProperty(result, prop);
 				}
 			}
 
 			return result;
+		}
+
+		private static void DecryptProperty<T>(T result, PropertyInfo prop) where T : UserOptionsBase, new()
+		{
+			EncryptAttribute attr = prop.GetCustomAttribute<EncryptAttribute>();
+			object currentValue = prop.GetValue(result);
+			if (currentValue != null)
+			{
+				prop.SetValue(result, Encryption.Decrypt(currentValue.ToString(), attr.Scope));
+			}
 		}
 
 		public void Save()
@@ -88,16 +93,9 @@ namespace AdamOneilSoftware
 			string path = Path.GetDirectoryName(Filename);
 			if (!Directory.Exists(path)) Directory.CreateDirectory(path);
 
-			PropertyInfo[] allProps = GetType().GetProperties();
-			foreach (var prop in allProps.Where(p => p.HasAttribute<EncryptAttribute>()))
-			{
-				EncryptAttribute attr = prop.GetCustomAttribute<EncryptAttribute>();
-				object currentValue = prop.GetValue(this);
-				if (currentValue != null)
-				{
-					prop.SetValue(this, Encryption.Encrypt(currentValue.ToString(), attr.Scope));
-				}
-			}
+			PropertyInfo[] encryptedProps = GetType().GetProperties().Where(p => p.HasAttribute<EncryptAttribute>()).ToArray();
+
+			foreach (var prop in encryptedProps) EncryptProperty(prop);
 
 			XmlSerializer xs = new XmlSerializer(this.GetType());
 			using (StreamWriter writer = File.CreateText(Filename))
@@ -105,8 +103,20 @@ namespace AdamOneilSoftware
 				xs.Serialize(writer, this);
 				writer.Close();				
 			}
+
+			foreach (var prop in encryptedProps) DecryptProperty(this, prop);			
 		}
-		
+
+		private void EncryptProperty(PropertyInfo prop)
+		{
+			EncryptAttribute attr = prop.GetCustomAttribute<EncryptAttribute>();
+			object currentValue = prop.GetValue(this);
+			if (currentValue != null)
+			{
+				prop.SetValue(this, Encryption.Encrypt(currentValue.ToString(), attr.Scope));
+			}
+		}
+
 		public void RestoreFormPosition(FormPosition formPosition, Form form)
 		{
 			if (formPosition == null) return;
