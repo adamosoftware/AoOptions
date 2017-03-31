@@ -55,19 +55,29 @@ namespace AdamOneilSoftware
 			fileName = Path.Combine(GetFolder(location), fileName);
 
 			T result = new T();
-			result.Filename = fileName;			
+					
 			if (File.Exists(fileName))
 			{
-                result = XmlSerializerHelper.Load<T>(fileName);                
-
-				PropertyInfo[] allProps = typeof(T).GetProperties();
-				foreach (var prop in allProps.Where(p => p.HasAttribute<EncryptAttribute>()))
-				{
-					DecryptProperty(result, prop);
-				}
+                FileInfo fi = new FileInfo(fileName);
+                if (fi.Length != 0)
+                {
+                    if (XmlSerializerHelper.TryLoad<T>(fileName, out result))
+                    {
+                        PropertyInfo[] allProps = typeof(T).GetProperties();
+                        foreach (var prop in allProps.Where(p => p.HasAttribute<EncryptAttribute>()))
+                        {
+                            DecryptProperty(result, prop);
+                        }
+                    }
+                    else
+                    {
+                        result = new T();
+                    }
+                }                				
 			}
 
-			return result;
+            result.Filename = fileName;
+            return result;
 		}
 
 		private static void DecryptProperty<T>(T result, PropertyInfo prop) where T : UserOptionsBase, new()
@@ -88,7 +98,7 @@ namespace AdamOneilSoftware
 
             XmlSerializerHelper.Save(this, Filename);
 
-			foreach (var prop in encryptedProps) DecryptProperty(this, prop);			
+            foreach (var prop in encryptedProps) DecryptProperty(this, prop);			
 		}
 
 		private void EncryptProperty(PropertyInfo prop)
