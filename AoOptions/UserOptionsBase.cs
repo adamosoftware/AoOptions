@@ -58,15 +58,7 @@ namespace AdamOneilSoftware
 			result.Filename = fileName;			
 			if (File.Exists(fileName))
 			{
-				FileInfo fi = new FileInfo(fileName);
-				if (fi.Length == 0) return new T() { Filename = fileName };
-				XmlSerializer xs = new XmlSerializer(typeof(T));
-				using (StreamReader reader = File.OpenText(fileName))
-				{
-					result = (T)xs.Deserialize(reader);
-					result.Filename = fileName;
-					reader.Close();
-				}
+                result = XmlSerializerHelper.Load<T>(fileName);                
 
 				PropertyInfo[] allProps = typeof(T).GetProperties();
 				foreach (var prop in allProps.Where(p => p.HasAttribute<EncryptAttribute>()))
@@ -90,19 +82,11 @@ namespace AdamOneilSoftware
 
 		public void Save()
 		{
-			string path = Path.GetDirectoryName(Filename);
-			if (!Directory.Exists(path)) Directory.CreateDirectory(path);
-
 			PropertyInfo[] encryptedProps = GetType().GetProperties().Where(p => p.HasAttribute<EncryptAttribute>()).ToArray();
 
 			foreach (var prop in encryptedProps) EncryptProperty(prop);
 
-			XmlSerializer xs = new XmlSerializer(this.GetType());
-			using (StreamWriter writer = File.CreateText(Filename))
-			{
-				xs.Serialize(writer, this);
-				writer.Close();				
-			}
+            XmlSerializerHelper.Save(this, Filename);
 
 			foreach (var prop in encryptedProps) DecryptProperty(this, prop);			
 		}
