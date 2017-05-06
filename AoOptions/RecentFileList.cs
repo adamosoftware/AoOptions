@@ -54,13 +54,11 @@ namespace AdamOneilSoftware
 		public void BuildMenuItems()
 		{
 			int index = 0;
-			foreach (var item in this)
+			foreach (var item in this.GroupBy(item => item).Select(grp => grp.Key).Take(MaxCount))
 			{
 				index++;
-				FileMenuItem mnuFileItem = new FileMenuItem("&" + index.ToString() + " " + item);
+				FileMenuItem mnuFileItem = new FileMenuItem(item, index);
 				mnuFileItem.DisplayStyle = ToolStripItemDisplayStyle.Text;
-				mnuFileItem.Filename = item;
-				mnuFileItem.Index = index;
 				mnuFileItem.Click += mnuFileItem_Click;
 				MenuItem.DropDownItems.Add(mnuFileItem);
 			}
@@ -72,18 +70,23 @@ namespace AdamOneilSoftware
 			if (mi != null)
 			{
 				_selectedFile = mi.Filename;
-				if (FileSelected != null) FileSelected(sender, e);
+				FileSelected?.Invoke(sender, e);
 			}			
 		}
 	}
 
 	public class FileMenuItem : ToolStripMenuItem
 	{
-		public FileMenuItem(string text) : base(text)
-		{			
+		private readonly string _filename;
+		private readonly int _index;
+
+		public FileMenuItem(string fileName, int index) : base($"{index} {fileName}")
+		{
+			_filename = fileName;
+			_index = index;
 		}
 
-		public int Index { get; set; }
-		public string Filename { get; set; }
+		public int Index { get { return _index; } }
+		public string Filename { get { return _filename; } }
 	}
 }
