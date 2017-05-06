@@ -40,13 +40,13 @@ Use encrypted properties just like any other. There's no special handling requir
 
 Note that encrypted properties are encrypted on disk, but clear in memory.
 
-##Binding Settings to Checked Menu Items
+## Binding Settings to Checked Menu Items
 You can bind a `bool` settings property to the Checked state of ToolStripMenuItem. There are two steps. 1) In your form's Load event, set the initial Checked state of the menu item according to the current option setting. 2) Use the `BindCheckedMenuItem` method to track subsequent changes to the check state. Example:
 
     setting1ToolStripMenuItem.Checked = _options.Setting1;
     _options.BindCheckedMenuItem(setting1ToolStripMenuItem, (menuItem) => { _options.Setting1 = menuItem.Checked; });
 
-##Using Recent File List
+## Using Recent File List
 You can have a list of recently used file names managed automatically with the `RecentFileList` class. Here are the steps, assuming your recent files property is called `RecentFiles`:
 
 1. In your UserOptions class, add property called `RecentFiles` of type `RecentFileList`.
@@ -77,3 +77,12 @@ Here's what the form Load event would need. I have omitted some code for clarity
     {
         MessageBox(_options.RecentFiles.SelectedFilename);
     }
+    
+In the code where the user opens a file, you must call the `AddFile` method to add the filename to the list. Here's a simple example:
+
+    OpenFileDialog dlg = new OpenFileDialog();
+    dlg.Filter = "All Files|*.*";
+    if (dlg.ShowDialog() == DialogResult.OK) _options.RecentFiles.AddFile(dlg.FileName);
+
+
+    
